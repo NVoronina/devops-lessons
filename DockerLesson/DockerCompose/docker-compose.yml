@@ -1,0 +1,16 @@
+version: '2'
+services:
+  dev:
+    environment:
+      - CATALINA_BASE=/usr/local/tomcat
+    build: DevCustom
+  prod:
+    image: tomcat:latest
+    environment:
+      - CATALINA_BASE=/usr/local/tomcat
+    links:
+      - dev
+    ports:
+      - "8080:81"
+    volumes:
+      - /code/target/hello-1.0.war:{CATALINA_BASE}/webapps/
