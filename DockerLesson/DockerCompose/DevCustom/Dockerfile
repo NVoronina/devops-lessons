@@ -1,5 +1,6 @@
 FROM tomcat:8.0
 
+ENV CATALINA_BASE=/usr/local/tomcat
 RUN apt-get update
 RUN apt-get install -y git default-jdk maven nano net-tools
 
