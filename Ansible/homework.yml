@@ -1,0 +1,42 @@
+---
+- name: install boxfuse
+  hosts: web
+  become: yes
+
+  tasks:
+    - name: Install tomcat
+      apt:
+        name: tomcat8
+        state: present
+    - name: Install default-jdk
+      apt:
+        name: default-jdk
+        state: present
+    - name: Install maven
+      apt:
+        name: maven
+        state: present
+    - name: Install git
+      apt:
+        name: git
+        state: present
+
+    - name: Сlone from git
+      git:
+        repo: 'https://github.com/boxfuse/boxfuse-sample-java-war-hello.git'
+        dest: '/code'
+        version: master
+
+    - name: Compile java app
+      shell: cd /code && mvn package
+
+    - name: Rm all tomact8 artefacts
+      shell: rm -rf /var/lib/tomcat8/webapps/*
+
+    - name: Copy war file
+      shell: cp /code/target/hello-1.0.war /var/lib/tomcat8/webapps/
+
+    - name: Ensure tomcat8 service is started
+      service:
+        name: tomcat8
+        state: started
